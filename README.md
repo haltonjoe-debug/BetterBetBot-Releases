@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Live iRacing betting for your Twitch chat</strong><br>
-  Viewers bet virtual currency on race outcomes — positions, crashes, incidents, and more — with dynamic odds powered by real-time telemetry.
+  Viewers bet virtual currency on race outcomes — positions, crashes, incidents, and more — with dynamic odds powered by real-time telemetry. This a perk offered to subscribers of my Twitch channel, I make no claims about it actually working
 </p>
 
 <p align="center">
