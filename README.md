@@ -231,7 +231,7 @@ Displays settlement results and winner announcements after the race.
 
 Compact "In The Money" ticker showing which bets are currently winning.
 
-![ITM Overlay](assets/screenshots/overlay_itm.png)
+![ITM Overlay](assets/screenshots/overlay_itm_v2.png)
 
 ### Adding to OBS
 
