@@ -229,7 +229,7 @@ Displays settlement results and winner announcements after the race.
 
 `http://localhost:8080/overlay/itm`
 
-Compact "In The Money" ticker showing which bets are currently winning.
+Compact "In The Money" ticker showing which bets are currently winning and the probability of the bet winning based on current position, gaps to cars, laps left and various real-time variables.
 
 ![ITM Overlay](assets/screenshots/overlay_itm_v2.png)
 
