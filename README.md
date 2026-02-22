@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Live iRacing betting for your Twitch chat</strong><br>
-  Viewers bet virtual currency on race outcomes — positions, crashes, incidents, and more — with dynamic odds powered by real-time telemetry. This a perk offered to subscribers of my Twitch channel, I make no claims about it actually working
+  Viewers bet virtual currency on race outcomes — positions, crashes, incidents, and more — with dynamic odds powered by real-time telemetry.
 </p>
 
 <p align="center">
@@ -209,11 +209,29 @@ For timed races, Halfway and Last Lap use elapsed time instead of laps.
 
 BetterBetBot includes three browser-source overlays for OBS:
 
-| Overlay | URL | Description |
-|---|---|---|
-| **Bets Overlay** | `http://localhost:8080/overlay` | Shows active bets, odds, and live win probabilities during the race. |
-| **Payouts Overlay** | `http://localhost:8080/overlay?view=payouts` | Displays settlement results and winner announcements after the race. |
-| **ITM Overlay** | `http://localhost:8080/overlay/itm` | Compact "In The Money" ticker showing which bets are currently winning. |
+### Bets Overlay
+
+`http://localhost:8080/overlay`
+
+Shows active bets, odds, and live win probabilities during the race.
+
+![Bets Overlay](assets/screenshots/overlay_bets_open.png)
+
+### Payouts Overlay
+
+`http://localhost:8080/overlay?view=payouts`
+
+Displays settlement results and winner announcements after the race.
+
+![Payouts Overlay](assets/screenshots/overlay_payouts.png)
+
+### ITM Overlay
+
+`http://localhost:8080/overlay/itm`
+
+Compact "In The Money" ticker showing which bets are currently winning.
+
+![ITM Overlay](assets/screenshots/overlay_itm.png)
 
 ### Adding to OBS
 
@@ -246,6 +264,14 @@ Access the web dashboard at `http://localhost:8080/` while the bot is running. I
 - Leaderboard and season standings
 - Post-race analytics and settlement history
 - House profit/loss tracking
+
+![Dashboard](assets/screenshots/dashboard.png)
+
+---
+
+## Control Panel
+
+![Control Panel](assets/screenshots/control_panel.png)
 
 ---
 
