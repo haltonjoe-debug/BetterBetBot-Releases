@@ -271,7 +271,35 @@ Access the web dashboard at `http://localhost:8080/` while the bot is running. I
 
 ## Control Panel
 
-![Control Panel](assets/screenshots/control_panel.png)
+### Status Tab
+Live connection status, session info, and log output.
+
+![Status Tab](assets/screenshots/gui1.png)
+
+### Betting Tab
+Open/close betting, set close mode, and toggle bet categories.
+
+![Betting Tab](assets/screenshots/gui2.png)
+
+### Overlay Tab
+Overlay URLs for OBS, show/hide controls, timing, and custom names.
+
+![Overlay Tab](assets/screenshots/gui3.png)
+
+### Settings Tab
+Channel, currency, port, OBS WebSocket, and log sending.
+
+![Settings Tab](assets/screenshots/gui4.png)
+
+### Links Tab
+Quick-launch buttons for the dashboard and overlays.
+
+![Links Tab](assets/screenshots/gui5.png)
+
+### Database Tab
+User management, bet history, house stats, and race snapshot rollback.
+
+![Database Tab](assets/screenshots/gui6.png)
 
 ---
 
