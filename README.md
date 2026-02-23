@@ -14,6 +14,7 @@
   <a href="#installation">Installation</a> &middot;
   <a href="#getting-started">Getting Started</a> &middot;
   <a href="#chat-commands">Chat Commands</a> &middot;
+  <a href="#channel-points-redemption">Channel Points</a> &middot;
   <a href="#obs-overlays">OBS Overlays</a> &middot;
   <a href="#faq">FAQ</a>
 </p>
@@ -108,6 +109,7 @@ Once running, the **Control Panel** window is your command center:
 | `!leaderboard` or `!lb` | Top 10 currency holders. |
 | `!season` or `!standings` | Current season standings by profit. |
 | `!give <amount> <user>` | Give currency to another viewer. |
+| `!claim <cp>` | Redeem Twitch channel points for betting currency. See [Channel Points](#channel-points-redemption). |
 | `!betstats` | Database-wide betting statistics. |
 | `!crashstats` | Streamer's recent crash/DNF rates. |
 | `!trackstats` | Stats for the current track. |
@@ -202,6 +204,78 @@ Control when betting closes during a race. Set this in the Control Panel or via 
 | **Full Race** | Only at the checkered flag (bets open the entire race). |
 
 For timed races, Halfway and Last Lap use elapsed time instead of laps.
+
+---
+
+## Channel Points Redemption
+
+Viewers can spend **Twitch channel points** to receive betting currency. This gives loyal viewers a way to top up their balance using the channel points they've earned by watching your stream.
+
+### How It Works
+
+1. **You (the streamer)** create a custom Channel Point Reward on Twitch (e.g. "Get 1000 potatoes" for 500 channel points).
+2. **A viewer** redeems that reward on your channel.
+3. **The viewer** types `!claim <cp_spent>` in chat, where `<cp_spent>` is the channel point cost of the reward they redeemed.
+4. **The bot** credits them with betting currency based on the conversion ratio and announces it in chat.
+
+### Setup (Streamer)
+
+1. Go to your **Twitch Creator Dashboard** → **Viewer Rewards** → **Channel Points** → **Custom Rewards**.
+2. Create a new reward:
+   - **Name:** Choose something clear, e.g. "Get 1000 potatoes" (use your currency name).
+   - **Cost:** Set the channel point cost (e.g. 500).
+   - **Require Viewer to Enter Text:** Off.
+   - **Max Redemptions Per Stream Per User:** Optionally set to 2 (the bot also enforces this).
+3. That's it. The bot handles the rest.
+
+### Conversion Ratio
+
+By default, **1 channel point = 2 betting currency**. So a 500 CP reward gives 1,000 currency.
+
+You can change this ratio by editing the `CP_CURRENCY_RATIO` value in `src/config/constants.py`:
+
+```python
+CP_CURRENCY_RATIO = 2   # 1 channel point = 2 currency (default)
+```
+
+| Ratio | 500 CP Reward Gives | Good For |
+|---|---|---|
+| `1` | 500 currency | Conservative — channel points are worth less |
+| `2` | 1,000 currency | **Default** — balanced |
+| `3` | 1,500 currency | Generous — rewards loyal viewers more |
+| `5` | 2,500 currency | Very generous — big boost per redemption |
+
+> **Tip:** Match the reward name to the actual amount viewers will receive. If your ratio is 2 and the reward costs 500 CP, name it "Get 1000 [currency]" so viewers know what they're getting.
+
+### Anti-Abuse Protections
+
+| Protection | Default | Details |
+|---|---|---|
+| **Max redemptions per stream** | 2 | Each viewer can redeem up to 2 times per stream session. |
+| **Cooldown between redemptions** | 30 minutes | Per-user cooldown — other viewers can redeem immediately. |
+| **Balance cap** | Disabled | Optionally block redemptions if a viewer's balance exceeds a threshold. |
+
+These values can be adjusted in `src/config/constants.py`:
+
+```python
+CP_MAX_REDEMPTIONS_PER_STREAM = 2   # Max claims per user per stream
+CP_COOLDOWN_SECONDS = 1800          # 30 minutes between claims (per user)
+CP_BALANCE_CAP = 0                  # 0 = no cap; set e.g. 5000 to block rich users
+```
+
+### Example
+
+```
+Viewer redeems "Get 1000 potatoes" on Twitch (costs 500 CP)
+Viewer types: !claim 500
+Bot responds: @viewer Redeemed! +1,000 potatoes (balance: 2,500). 1 redemption left this stream.
+```
+
+Typing `!claim` with no amount shows your remaining redemptions and cooldown status.
+
+### Future: Automatic Detection
+
+A future update will add automatic detection via Twitch EventSub, so viewers won't need to type `!claim` — the bot will detect the redemption and credit currency instantly. This requires additional Twitch OAuth scopes that will be added in a later release.
 
 ---
 
@@ -343,6 +417,15 @@ If you disconnect during a race, position bets are settled as DNF and crash bets
 
 **Q: What happens if a viewer runs out of currency?**
 After each race, viewers with zero balance are automatically replenished with 500 currency. There is also a small login bonus each session.
+
+**Q: Can viewers buy unlimited currency with channel points?**
+No. Each viewer is limited to 2 redemptions per stream, with a 30-minute cooldown between each. These limits are enforced by the bot regardless of what you set on the Twitch reward itself.
+
+**Q: How do I change how much currency viewers get per channel point?**
+Edit `CP_CURRENCY_RATIO` in `src/config/constants.py`. The default is `2` (1 CP = 2 currency). See [Channel Points Redemption](#channel-points-redemption) for a full guide.
+
+**Q: Do I need to set up anything special on Twitch for channel points?**
+Just create a custom Channel Point Reward with whatever name and cost you like. The bot doesn't need any special Twitch permissions for the `!claim` command — it works purely through chat.
 
 **Q: Can I change the currency name after setup?**
 Yes. Use the **Settings** tab in the Control Panel to change it at any time.
