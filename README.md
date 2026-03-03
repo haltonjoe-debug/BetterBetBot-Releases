@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Dynamic Live iRacing Betting — Everything Changes, Every Second</strong><br>
-  Experience real-time betting powered by live telemetry. Odds shift instantly as positions change, incidents happen, and race dynamics evolve. Bet on anything, any position, any outcome — the bot tracks it all in real-time.
+  Experience real-time betting powered by live telemetry. Odds shift instantly as positions change, incidents happen, and race dynamics evolve. Bet on anything, any position, any outcome — the bot tracks it all in real-time. Now with Discord integration!
 </p>
 
 <p align="center">
@@ -15,6 +15,7 @@
   <a href="#getting-started">Getting Started</a> &middot;
   <a href="#dynamic-betting">Dynamic Betting</a> &middot;
   <a href="#obs-overlays">OBS Overlays</a> &middot;
+  <a href="#discord-integration--bring-betting-to-your-server">Discord</a> &middot;
   <a href="#faq">FAQ</a>
 </p>
 
@@ -102,6 +103,14 @@ Once running, the **Control Panel** window is your command center:
 8. **Final settlement**: All remaining bets are settled automatically, with payouts announced in chat.
 9. **Auto-replenishment**: Zero-balance viewers are automatically replenished so everyone can keep playing.
 
+### Mid-Race Join Support
+
+If you start the bot after a race has already gone green, BetterBetBot will:
+- Automatically detect the current session state
+- Open betting if configured for late joins (Halfway/Last Lap/Full Race modes)
+- Calculate odds based on current live race conditions
+- Settle bets normally at race completion
+
 ---
 
 ## 🎰 Dynamic Betting System
@@ -114,6 +123,7 @@ Once running, the **Control Panel** window is your command center:
 | `podium` | You finish P1, P2, or P3 | Gap to P4, current pace, incident rate |
 | `top5` | You finish P1 through P5 | Position trends, lap times, traffic situations |
 | `top10`, `top15`, `top20`, etc. | You finish within the top N | Race progress, caution patterns, tire strategy |
+| `bottomN` | You finish in the bottom N positions (last N finishers in the field) | Position tracking + live field size |
 
 ### Event Bets — Race Moment Predictions
 
@@ -175,6 +185,7 @@ Control when betting closes during a race. Set this in the Control Panel or via 
 | **Halfway** | The leader reaches the halfway point | Mix of pre-race and early-race dynamics |
 | **Last Lap** | The leader starts the final lap | Late-race drama, higher house edge |
 | **Full Race** | Only at the checkered flag | Maximum action, highest risk/reward |
+| **Lap N** (`lap:N`) | The leader completes lap N (e.g., `lap:10`) | Custom close point for any specific lap in the race |
 
 **Dynamic House Edge**: To prevent exploitation of near-certain late-race outcomes, the house edge scales from 5% (pre-race) up to 35% (race end).
 
@@ -215,6 +226,8 @@ Control when betting closes during a race. Set this in the Control Panel or via 
 | `!closemode` | Show the current betting close mode |
 | `!endseason` | End the current season and start a new one |
 | `!debug` | Toggle debug logging |
+| `!discord` | Show Discord integration status |
+| `!trial` | Show trial system status (if applicable) |
 
 ---
 
@@ -266,6 +279,77 @@ BetterBetBot can automatically show and hide your overlay sources at the right t
    - The source names for your Bets and Payouts overlays.
 3. The bot will automatically show the bets overlay when betting opens, hide it at green flag, and show the payouts overlay after settlement.
 
+---
+
+## 🎮 Discord Integration — Bring Betting to Your Server
+
+BetterBetBot can post betting results, odds, and leaderboards directly to your Discord server with rich embeds and interactive buttons.
+
+### Features
+- **Automatic bet results** with generated images and detailed statistics
+- **Interactive betting buttons** — viewers can place bets directly in Discord
+- **Slash commands**: `/leaderboard`, `/odds`, `/balance`, `/stats`, `/recent`
+- **Live race notifications** — betting opens, green flag, settlements
+- **Log upload support** — send debug logs directly to support channels
+
+### Setup
+1. In the **Settings** tab, click **"Invite Bot to Discord Server"**
+2. Authorize the bot on your server (requires "Manage Server" permission)
+3. Create channels: `#betting` (for interactive betting) and `#bets-results` (for results)
+4. Copy the Server ID and Channel IDs into the GUI fields
+5. Check **"Enable Discord Bot"** and restart
+
+### Discord Commands
+| Command | Description |
+|---|---|
+| `/leaderboard` | Show top 10 currency holders with generated image |
+| `/balance username:<user>` | Check a specific user's balance |
+| `/odds` | View current betting odds with generated image |
+| `/stats` | Show aggregate betting statistics |
+| `/recent` | Display recent bet results |
+
+### Discord Bot in Action
+
+#### Automatic Race Results
+![Discord Race Results](assets/screenshots/discord_results.png)
+
+The bot automatically posts detailed race results with winner announcements, top payouts, and generated leaderboard images as soon as the race finishes.
+
+#### Interactive Betting Buttons
+![Discord Betting](assets/screenshots/discord_betting.png)
+
+When betting opens, viewers can place bets directly through Discord buttons or use traditional chat commands. The bot shows current odds, session info, and popular bet types.
+
+#### Slash Commands
+![Discord Commands](assets/screenshots/discord_commands.png)
+
+Rich slash commands provide detailed information with generated images. Viewers can check balances, view odds, see leaderboards, and get comprehensive statistics.
+
+> **Note**: The Discord bot uses the same shared bot model as Twitch — no separate bot account needed.
+
+---
+
+## 🏁 Team Racing Support
+
+BetterBetBot fully supports iRacing team racing events (endurance races like Daytona 24h, Spa 24h, etc.).
+
+### How Team Racing Bets Work
+- **Bets apply to your TEAM's result**, not individual drivers
+- **Position bets** (P1, podium, top5, etc.) work normally — they pay out based on where your team finishes
+- **Crash/DNF bets** track the car — if your team's car gets towed, crash bets win
+- **Incident bets** use **team total incidents** (cumulative across all drivers)
+- **Fastest lap** and **lead lap** bets work per-car (normal)
+
+### What Changes During Driver Swaps
+- Driver swaps don't affect betting — the car's `CarIdx` stays constant
+- Team incident count continues accumulating across all drivers
+- Position and lap data remain continuous (car-based, not driver-based)
+
+### Chat Announcements
+When a team race is detected, the bot announces: *"Team racing detected — bets apply to your TEAM's result."*
+
+---
+
 ## 📊 Dashboard — Command Central
 
 Access the web dashboard at `http://localhost:8080/` while the bot is running. It provides:
@@ -298,7 +382,7 @@ Overlay URLs for OBS, show/hide controls, timing, and custom names.
 ![Overlay Tab](assets/screenshots/gui3.png)
 
 ### Settings Tab
-Channel, currency, port, OBS WebSocket, and log sending configuration.
+Channel, currency, port, OBS WebSocket, bet confirmation message toggle, and log sending configuration.
 
 ![Settings Tab](assets/screenshots/gui4.png)
 
@@ -368,7 +452,7 @@ No. Viewers interact entirely through Twitch chat commands. Nothing to download.
 No. It is virtual currency for entertainment only. No real money is involved.
 
 **Q: What happens if iRacing disconnects mid-race?**
-If you disconnect during a race, position bets are settled as DNF and crash bets pay out. If you disconnect before the race starts, all bets are refunded.
+If you disconnect mid-race, position and finish bets lose, DNF bets win, and cumulative bets (incidents, fastest lap, lead a lap, cautions) settle based on the last recorded telemetry snapshot. Crash bets are already settled the moment a tow occurs so they are unaffected. If you disconnect before the race starts or no telemetry data is available, all bets are refunded.
 
 **Q: What happens if a viewer runs out of currency?**
 After each race, viewers with zero balance are automatically replenished with 500 currency. There is also a small login bonus each session.
@@ -388,6 +472,15 @@ You need an active Twitch subscription to [joehalton](https://www.twitch.tv/joeh
 **Q: Can multiple streamers use this at the same time?**
 Yes. Each streamer runs their own instance with their own database. The shared bot account handles all channels.
 
+**Q: Does this work with team racing?**
+Yes! BetterBetBot fully supports iRacing team racing (endurance events). In team races, bets apply to your team's result rather than an individual driver. Position, crash, and finish bets work normally. Incident bets track team incidents (cumulative across all drivers).
+
+**Q: Is there a trial period for new users?**
+Yes! New users get a 30-day trial period with full access to all features. After the trial, an active Twitch subscription to [joehalton](https://www.twitch.tv/joehalton) is required.
+
+**Q: What if I start the bot after a race has begun?**
+BetterBetBot supports mid-race joins. It will automatically detect the current session state and open betting if you're using a late-race close mode (Halfway, Last Lap, or Full Race).
+
 **Q: How do updates work?**
 BetterBetBot checks for updates automatically on each launch. If a new version is available, you'll be prompted to download and install it.
 
@@ -403,6 +496,7 @@ BetterBetBot checks for updates automatically on each launch. If a new version i
 | Overlays show blank | Verify the URL and port match your settings. Try `http://localhost:8080/overlay` in a browser first. |
 | "Failed to obtain bot token" | Check your internet connection. If the problem persists, delete `%APPDATA%\TwitchRacingBetBot\bot_token.json` and restart. |
 | Betting doesn't open | Betting only opens during **race sessions** (not practice or qualifying). Wait for the race grid phase. |
+| Discord bot not responding | Verify the bot is invited to your server and has permissions. Check channel IDs are correct. Use `!discord` command to check status. |
 | Odds seem wrong | Odds are calculated dynamically based on multiple factors. Check track history, driver iRatings, and current race conditions. |
 
 ### Send Logs to Developer
